@@ -1,26 +1,26 @@
 {
-    "manifest_version": 2,
-    "name": "Web Extension Starter",
-    "description": "A Web Extension starter kit",
+    "manifest_version": 3,
+    "name": "UFO Extension",
+    "description": "A UFO Extension kit",
     "version": "1.0.0",
-    "browser_action": {
-        "default_icon": "icon-16.png",
-        "default_popup": "popup.html"
-    },
     "background": {
-        "scripts": ["js/background.bundle.js"],
-        "persistent": false
+        "service_worker": "js/background.bundle.js"
     },
-    "content_scripts": [{
-      "matches": ["http://*/", "https://*/"],
-        "js": [
-          "js/content-script.bundle.js"
-        ]
-    }],
+    "content_scripts": [
+        {
+            "matches": [
+                "http://localhost:3000/*",
+                "http://ufo-universe.hyundaicard.com:3000/*"
+            ],
+            "js": ["js/content-script.bundle.js"],
+            "match_origin_as_fallback": true,
+            "all_frames": true
+        }
+    ],
     "icons": {
         "16": "icon-16.png",
         "48": "icon-48.png",
         "128": "icon-128.png"
     },
-    "permissions": ["tabs", "activeTab", "notifications", "http://*/", "https://*/"]
+    "permissions": ["downloads"]
 }

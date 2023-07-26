@@ -18,7 +18,8 @@
       "experimentalDecorators": true,
       "emitDecoratorMetadata": true,
       "pretty": true,
-      "skipLibCheck": true,                     
+      "skipLibCheck": true,
+      "downlevelIteration": true,                     
       "forceConsistentCasingInFileNames": true,
       "types": ["jest", "node"],
       "typeRoots": ["node_modules/@types" ]
