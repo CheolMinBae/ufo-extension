@@ -22,18 +22,15 @@ export function stopEventListeners() {
  */
 export function startEventListeners(state: RecordingState) {
   // Remove old event listeners in case any are already there
-  stopEventListeners();
+  // stopEventListeners();
 
   recordingState = state;
   console.log('Starting event listeners with recording state:', recordingState);
   const iframeWrapper: HTMLIFrameElement = document.getElementById('universe_iframe') as HTMLIFrameElement;
   console.log(iframeWrapper);
   if (iframeWrapper) {
-    // iframeWrapper.contentWindow?.addEventListener('click' , clickListener, {capture: true});
-    iframeWrapper.contentWindow?.postMessage({
-      type: 'addListener',
-      listener: clickListener,
-    }, '*')
+    // iframeWrapper.contentWindow?.document.addEventListener('click' , clickListener, {capture: true});
+    postMessage("1234", '*')
     window.addEventListener('click', clickListener, {capture: true});
 
     // iframeWrapper.addEventListener('click', clickListener, {capture: true});
@@ -51,39 +48,42 @@ export function startEventListeners(state: RecordingState) {
  * or triggering default behavior.
  */
 function clickListener(event: MouseEvent) {
+  // console.log(event.isTrusted)
   // TODO: Check event.isTrusted or whatever to see if event was created by user
-  console.log('on clickListener');
-  console.log(event);
-  const target = event.target as HTMLElement;
+  if (event.isTrusted) {
+    console.log('on clickListener');
+    console.log(event);
+    const target = event.target as HTMLElement;
 
-  if (recordingState === 'pre-recording') {
-    // If picking elements and the element already has a parroteer ID, do nothing
-    if ('parroteerId' in target.dataset) return;
+    if (recordingState === 'pre-recording') {
+      // If picking elements and the element already has a parroteer ID, do nothing
+      if ('parroteerId' in target.dataset) return;
 
-    event.stopPropagation();
-    event.preventDefault();
-  }
-
-  const selector = getRelativeSelector(target);
-  const displaySelector = getFullSelector(target);
-  console.log('Element clicked:', selector);
-  console.log('Element state', elementStates);
-  const mutations = diffElementStates();
-
-  chrome.runtime.sendMessage({
-    type: 'event-triggered',
-    payload: {
-      event: {
-        type: 'input',
-        selector,
-        displaySelector,
-        eventType: event.type,
-        timestamp: Date.now(),
-        parroteerId: target.dataset.parroteerId
-      },
-      prevMutations: mutations
+      event.stopPropagation();
+      event.preventDefault();
     }
-  });
+
+    const selector = getRelativeSelector(target);
+    const displaySelector = getFullSelector(target);
+    console.log('Element clicked:', selector);
+    console.log('Element state', elementStates);
+    const mutations = diffElementStates();
+
+    chrome.runtime.sendMessage({
+      type: 'event-triggered',
+      payload: {
+        event: {
+          type: 'input',
+          selector,
+          displaySelector,
+          eventType: event.type,
+          timestamp: Date.now(),
+          parroteerId: target.dataset.parroteerId
+        },
+        prevMutations: mutations
+      }
+    });
+  }
 }
 
 function keydownListener(event: KeyboardEvent) {

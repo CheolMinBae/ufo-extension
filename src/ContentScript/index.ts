@@ -15,24 +15,24 @@ chrome.runtime.onMessage.addListener(
   (message: RuntimeMessage, sender, sendResponse) => {
     switch (message.type) {
       case "add-listeners": {
-        console.log("in add-listeners");
+        // console.log("in add-listeners");
         const { idsToClear, recordingState } = message.payload as {
           idsToClear: string[];
           recordingState: RecordingState;
         };
         listeners.startEventListeners(recordingState);
-        if (recordingState === "pre-recording") enableHighlight();
-        else {
-          disableHighlight();
-          if (recordingState === "off") listeners.stopEventListeners();
-        }
-        if (idsToClear) {
-          idsToClear.forEach((id: ParroteerId) => {
-            const el = document.querySelector(`[data-parroteer-id="${id}"]`);
-            if (!(el instanceof HTMLElement)) return;
-            delete el.dataset.parroteerID;
-          });
-        }
+        // if (recordingState === "pre-recording") enableHighlight();
+        // else {
+        //   disableHighlight();
+        //   if (recordingState === "off") listeners.stopEventListeners();
+        // }
+        // if (idsToClear) {
+        //   idsToClear.forEach((id: ParroteerId) => {
+        //     const el = document.querySelector(`[data-parroteer-id="${id}"]`);
+        //     if (!(el instanceof HTMLElement)) return;
+        //     delete el.dataset.parroteerID;
+        //   });
+        // }
         break;
       }
       case "get-element-states": {
