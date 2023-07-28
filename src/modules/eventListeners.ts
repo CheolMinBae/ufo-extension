@@ -30,8 +30,8 @@ export function startEventListeners(state: RecordingState) {
   console.log(iframeWrapper);
   if (iframeWrapper) {
     // iframeWrapper.contentWindow?.document.addEventListener('click' , clickListener, {capture: true});
-    postMessage("1234", '*')
-    window.addEventListener('click', clickListener, {capture: true});
+    iframeWrapper.contentWindow?.postMessage("init", '*')
+    // window.addEventListener('click', clickListener, {capture: true});
 
     // iframeWrapper.addEventListener('click', clickListener, {capture: true});
     // iframeWrapper.onkeydown = (e) => (keydownListener(e));
