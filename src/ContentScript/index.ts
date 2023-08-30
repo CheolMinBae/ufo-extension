@@ -61,9 +61,8 @@ chrome.runtime.onMessage.addListener(
   }
 );
 
-const init = () => {
-    
-    const article = document.querySelector('.article > .buttons');
+const init = () => {    
+    const article = document.querySelector('#article > .buttons');
     console.log(article);
     if (article) {
         const button = document.createElement('button');
@@ -71,25 +70,51 @@ const init = () => {
         button.textContent="녹화 on";
         button.onclick=() => {
             console.log('begin recording button')
+            const devTools: any = chrome.devtools
+            console.log(devTools)
             chrome.runtime.sendMessage({ type: "begin-recording" });
         }
         setTimeout(() => {
             article.appendChild(button);
         }, 1000)
-    }
-    chrome.runtime.sendMessage({ type: "popup-opened" }).then((res) => {
-        console.log(res);
-    });
-    chrome.runtime.onMessage.addListener((message) => {
-      console.log(message);
-    });
 
-    window.addEventListener('message', event => {
-        console.log(event);
-    })
+        chrome.runtime.sendMessage({ type: "popup-opened" }).then((res) => {
+            console.log(res);
+        });
+        chrome.runtime.onMessage.addListener((message) => {
+          console.log(message);
+        });
+
+        window.addEventListener('message', event => {
+            console.log(event);
+        })
+    }
 }
 console.log('contents load');
-init();
-document.addEventListener('load', () => {
-    console.log('before init')
+// window.addEventListener('locationchange', () => {
+//     console.log(location.href)
+//     console.log('before init')
+// });
+// window.addEventListener('popstate', function (event) {
+// 	// The URL changed...
+//   console.log('in popstate')
+// });
+const observeUrlChange = () => {
+  let oldHref = document.location.href;
+  const body = document.querySelector("body") as HTMLBodyElement;
+  const observer = new MutationObserver(mutations => {
+    if (oldHref !== document.location.href) {
+      oldHref = document.location.href;
+      /* Changed ! your code here */
+      console.log('in changed');
+      init();
+    }
+  });
+  observer.observe(body, { childList: true, subtree: true });
+};
+
+window.addEventListener('load', function(){
+  //실행될 코드
+  console.log('on load')
+  observeUrlChange()
 });

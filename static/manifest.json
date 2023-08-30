@@ -10,7 +10,7 @@
         {
             "matches": [
                 "http://localhost/*",
-                "http://ufo-universe.hyundaicard.com/*"
+                "http://universe-ufo.hyundaicard.com:3000/*"
             ],
             "js": ["js/content-script.bundle.js"],
             "match_origin_as_fallback": true,
